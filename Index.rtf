@@ -1,0 +1,285 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2907
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 <!DOCTYPE html>\
+<html lang="fr">\
+<head>\
+<meta charset="UTF-8">\
+<meta name="viewport" content="width=device-width, initial-scale=1.0">\
+<title>Mon Bible Journal</title>\
+<style>\
+  :root \{ --papier:#fdf8f0; --encre:#3b3024; --accent:#7a2e3a; \}\
+  * \{ box-sizing:border-box; \}\
+  body \{ margin:0; font-family:Georgia, serif; background:var(--papier); color:var(--encre); \}\
+  header \{ background:var(--accent); color:#fff; padding:1rem; text-align:center; \}\
+  header h1 \{ margin:0; font-size:1.6rem; \}\
+  main \{ max-width:1100px; margin:auto; padding:1rem; display:grid; gap:1.5rem; grid-template-columns:1fr 1fr; \}\
+  @media (max-width:800px)\{ main \{ grid-template-columns:1fr; \} \}\
+  section \{ background:#fff; border-radius:12px; padding:1rem; box-shadow:0 2px 8px rgba(0,0,0,.08); \}\
+  h2 \{ margin-top:0; color:var(--accent); \}\
+  select, input, textarea, button \{ font:inherit; padding:.5rem; border:1px solid #d6c7b2; border-radius:8px; \}\
+  button \{ background:var(--accent); color:#fff; border:none; cursor:pointer; \}\
+  button.secondaire \{ background:#e9dfd1; color:var(--encre); \}\
+  .ligne \{ display:flex; gap:.5rem; flex-wrap:wrap; margin-bottom:.8rem; align-items:center; \}\
+  #versets \{ max-height:60vh; overflow-y:auto; line-height:1.7; \}\
+  .verset \{ cursor:pointer; padding:2px 4px; border-radius:4px; \}\
+  .verset sup \{ color:var(--accent); font-weight:bold; margin-right:3px; \}\
+  .lecture h4 \{ color:var(--accent); margin:1rem 0 .3rem; \}\
+  .lecture p \{ white-space:pre-wrap; margin:0; \}\
+  .jaune\{background:#fff3a3;\} .vert\{background:#c8f0c0;\} .bleu\{background:#c4e1ff;\} .rose\{background:#ffd0e0;\}\
+  .palette button \{ width:32px; height:32px; border-radius:50%; border:2px solid transparent; \}\
+  .palette button.actif \{ border-color:var(--encre); \}\
+  textarea \{ width:100%; min-height:150px; resize:vertical; \}\
+  .entree \{ border-left:4px solid var(--accent); padding:.5rem .8rem; margin:.8rem 0; background:var(--papier); border-radius:0 8px 8px 0; \}\
+  .entree small \{ color:#8a7a66; \}\
+  .entree p \{ white-space:pre-wrap; \}\
+  .tag \{ display:inline-block; background:#e9dfd1; border-radius:10px; padding:0 8px; font-size:.8rem; margin-right:4px; \}\
+  footer \{ text-align:center; font-size:.8rem; color:#8a7a66; padding:1rem; \}\
+</style>\
+</head>\
+<body>\
+<header><h1>\uc0\u10013  Mon Bible Journal</h1><small>Bible Crampon 1923 \'b7 Lectures du jour AELF</small></header>\
+\
+<main>\
+  <section>\
+    <h2>Lire</h2>\
+    <div class="ligne">\
+      <select id="livre"><option>Chargement\'85</option></select>\
+      <select id="chapitre"></select>\
+      <button id="btnLire">Lire</button>\
+    </div>\
+    <div class="ligne">\
+      <select id="zone">\
+        <option value="france">France</option>\
+        <option value="belgique">Belgique</option>\
+        <option value="canada">Canada</option>\
+        <option value="afrique">Afrique</option>\
+        <option value="romain">Calendrier romain</option>\
+      </select>\
+      <button id="btnJour">\uc0\u55357 \u56517  Lectures du jour</button>\
+    </div>\
+    <div class="ligne palette">\
+      Surligner :\
+      <button data-c="jaune" class="jaune actif" title="Jaune"></button>\
+      <button data-c="vert" class="vert" title="Vert"></button>\
+      <button data-c="bleu" class="bleu" title="Bleu"></button>\
+      <button data-c="rose" class="rose" title="Rose"></button>\
+      <button data-c="" class="secondaire" title="Effacer">\uc0\u10005 </button>\
+    </div>\
+    <h3 id="titrePassage"></h3>\
+    <div id="versets">Chargement de la Bible\'85</div>\
+  </section>\
+\
+  <section>\
+    <h2>Journal</h2>\
+    <textarea id="texte" placeholder="Ce que la Parole me dit aujourd'hui\'85"></textarea>\
+    <div class="ligne" style="margin-top:.5rem">\
+      <input id="tags" placeholder="tags : foi, pri\'e8re, Marie\'85" style="flex:1">\
+      <button id="btnSauver">Enregistrer</button>\
+    </div>\
+    <div class="ligne">\
+      <input id="recherche" placeholder="\uc0\u55357 \u56589  Rechercher dans mon journal" style="flex:1">\
+    </div>\
+    <div class="ligne">\
+      <button class="secondaire" id="btnExport">\uc0\u11015  Exporter</button>\
+      <label style="padding:.5rem;background:#e9dfd1;border-radius:8px;cursor:pointer">\
+        \uc0\u11014  Importer <input type="file" id="fichier" accept=".json" hidden>\
+      </label>\
+    </div>\
+    <div id="entrees"></div>\
+  </section>\
+</main>\
+\
+<footer>\
+  Texte biblique : traduction du chanoine A. Crampon, \'e9dition r\'e9vis\'e9e de 1923 (domaine public).<br>\
+  Lectures du jour : \'a9 AELF \'97 usage personnel et non commercial.\
+</footer>\
+\
+<script>\
+const NOMS_FR = \{\
+  "genesis":"Gen\'e8se","exodus":"Exode","leviticus":"L\'e9vitique","numbers":"Nombres","deuteronomy":"Deut\'e9ronome",\
+  "joshua":"Josu\'e9","judges":"Juges","ruth":"Ruth","1 samuel":"1 Samuel","2 samuel":"2 Samuel",\
+  "1 kings":"1 Rois","2 kings":"2 Rois","1 chronicles":"1 Chroniques","2 chronicles":"2 Chroniques",\
+  "ezra":"Esdras","nehemiah":"N\'e9h\'e9mie","tobit":"Tobie","tobias":"Tobie","judith":"Judith","esther":"Esther",\
+  "1 maccabees":"1 Maccab\'e9es","2 maccabees":"2 Maccab\'e9es","job":"Job","psalms":"Psaumes","proverbs":"Proverbes",\
+  "ecclesiastes":"Eccl\'e9siaste (Qoh\'e9let)","song of solomon":"Cantique des cantiques","song of songs":"Cantique des cantiques",\
+  "wisdom":"Sagesse","wisdom of solomon":"Sagesse","sirach":"Eccl\'e9siastique (Siracide)","ecclesiasticus":"Eccl\'e9siastique (Siracide)",\
+  "isaiah":"Isa\'efe","jeremiah":"J\'e9r\'e9mie","lamentations":"Lamentations","baruch":"Baruch","ezekiel":"\'c9z\'e9chiel",\
+  "daniel":"Daniel","hosea":"Os\'e9e","joel":"Jo\'ebl","amos":"Amos","obadiah":"Abdias","jonah":"Jonas","micah":"Mich\'e9e",\
+  "nahum":"Nahum","habakkuk":"Habacuc","zephaniah":"Sophonie","haggai":"Agg\'e9e","zechariah":"Zacharie","malachi":"Malachie",\
+  "matthew":"Matthieu","mark":"Marc","luke":"Luc","john":"Jean","acts":"Actes des Ap\'f4tres","romans":"Romains",\
+  "1 corinthians":"1 Corinthiens","2 corinthians":"2 Corinthiens","galatians":"Galates","ephesians":"\'c9ph\'e9siens",\
+  "philippians":"Philippiens","colossians":"Colossiens","1 thessalonians":"1 Thessaloniciens","2 thessalonians":"2 Thessaloniciens",\
+  "1 timothy":"1 Timoth\'e9e","2 timothy":"2 Timoth\'e9e","titus":"Tite","philemon":"Phil\'e9mon","hebrews":"H\'e9breux",\
+  "james":"Jacques","1 peter":"1 Pierre","2 peter":"2 Pierre","1 john":"1 Jean","2 john":"2 Jean","3 john":"3 Jean",\
+  "jude":"Jude","revelation":"Apocalypse","revelation of john":"Apocalypse"\
+\};\
+const nomFr = n => NOMS_FR[String(n).toLowerCase().trim()\
+  .replace(/^iii /,"3 ").replace(/^ii /,"2 ").replace(/^i /,"1 ")] || n;\
+\
+const $ = id => document.getElementById(id);\
+let data = JSON.parse(localStorage.getItem("bj-data") || '\{"surlignages":\{\},"entrees":[]\}');\
+let couleur = "jaune";\
+let passage = "";\
+let BIBLE = []; // [\{ nom, fr, chapitres: \{ 1: \{ 1: "texte" \} \} \}]\
+\
+const sauver = () => localStorage.setItem("bj-data", JSON.stringify(data));\
+const echapper = s => String(s).replace(/[&<>"']/g, c => (\{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"\}[c]));\
+\
+// ---------- Chargement de la Bible Crampon (fichier local du d\'e9p\'f4t) ----------\
+async function chargerBible() \{\
+  const rep = await fetch("crampon.json");\
+  if (!rep.ok) throw new Error("fichier introuvable (HTTP " + rep.status + ")");\
+  const brut = await rep.json();\
+  const livres = new Map();\
+  const ajouter = (nom, c, v, t) => \{\
+    if (!livres.has(nom)) livres.set(nom, \{\});\
+    const chap = livres.get(nom);\
+    (chap[c] ||= \{\})[v] = t;\
+  \};\
+  if (Array.isArray(brut.books)) \{\
+    for (const b of brut.books) for (const c of b.chapters) for (const v of c.verses)\
+      ajouter(b.name, c.chapter, v.verse, v.text);\
+  \} else \{\
+    const liste = Array.isArray(brut) ? brut : (brut.verses || []);\
+    for (const v of liste) ajouter(v.book_name || v.book, v.chapter, v.verse, v.text);\
+  \}\
+  if (!livres.size) throw new Error("format de fichier non reconnu");\
+  BIBLE = [...livres].map(([nom, chapitres]) => (\{ nom, fr: nomFr(nom), chapitres \}));\
+\}\
+\
+function remplirChapitres() \{\
+  const livre = BIBLE[$("livre").value];\
+  $("chapitre").innerHTML = "";\
+  Object.keys(livre.chapitres).forEach(c => $("chapitre").add(new Option("Chapitre " + c, c)));\
+\}\
+\
+function lire() \{\
+  const livre = BIBLE[$("livre").value];\
+  const c = $("chapitre").value;\
+  passage = `$\{livre.fr\} $\{c\}`;\
+  $("titrePassage").textContent = passage;\
+  $("versets").innerHTML = "";\
+  for (const [v, texte] of Object.entries(livre.chapitres[c])) \{\
+    const cle = `$\{livre.nom\} $\{c\}:$\{v\}`;\
+    const span = document.createElement("span");\
+    span.className = "verset " + (data.surlignages[cle] || "");\
+    span.innerHTML = `<sup>$\{v\}</sup>$\{echapper(texte)\} `;\
+    span.onclick = () => \{\
+      if (couleur) data.surlignages[cle] = couleur; else delete data.surlignages[cle];\
+      span.className = "verset " + couleur; sauver();\
+    \};\
+    $("versets").appendChild(span);\
+  \}\
+  $("versets").scrollTop = 0;\
+\}\
+\
+// ---------- Lectures de la messe du jour (AELF) ----------\
+const TYPES = \{ lecture_1:"Premi\'e8re lecture", psaume:"Psaume", cantique:"Cantique",\
+  lecture_2:"Deuxi\'e8me lecture", sequence:"S\'e9quence", entree_messianique:"Entr\'e9e messianique", evangile:"\'c9vangile" \};\
+const dateISO = d => `$\{d.getFullYear()\}-$\{String(d.getMonth()+1).padStart(2,"0")\}-$\{String(d.getDate()).padStart(2,"0")\}`;\
+const htmlVersTexte = h => new DOMParser()\
+  .parseFromString(h.replace(/<br\\s*\\/?>/gi, "\\n").replace(/<\\/p>/gi, "\\n\\n"), "text/html")\
+  .body.textContent.trim();\
+\
+async function lecturesDuJour() \{\
+  const auj = new Date();\
+  $("titrePassage").textContent = "Lectures du jour";\
+  $("versets").textContent = "Chargement\'85";\
+  try \{\
+    const rep = await fetch(`https://api.aelf.org/v1/messes/$\{dateISO(auj)\}/$\{$("zone").value\}`);\
+    if (!rep.ok) throw new Error("HTTP " + rep.status);\
+    const messe = (await rep.json()).messes[0];\
+    $("titrePassage").textContent = `$\{messe.nom || "Messe"\} \'97 $\{auj.toLocaleDateString("fr-FR", \{ dateStyle:"full" \})\}`;\
+    $("versets").innerHTML = "";\
+    const refs = [];\
+    for (const l of messe.lectures) \{\
+      const bloc = document.createElement("div"); bloc.className = "lecture";\
+      const h = document.createElement("h4");\
+      h.textContent = (TYPES[l.type] || l.type) + (l.ref ? " \'97 " + l.ref : "");\
+      const p = document.createElement("p");\
+      p.textContent = htmlVersTexte(l.contenu || "");\
+      bloc.append(h, p); $("versets").append(bloc);\
+      if (l.ref) refs.push(l.ref);\
+    \}\
+    passage = `Messe du $\{auj.toLocaleDateString("fr-FR")\}` + (refs.length ? ` ($\{refs.join(" ; ")\})` : "");\
+  \} catch (e) \{\
+    $("versets").textContent = "Impossible de charger les lectures du jour (" + e.message + ").";\
+  \}\
+\}\
+\
+// ---------- Palette ----------\
+document.querySelectorAll(".palette button").forEach(b => b.onclick = () => \{\
+  document.querySelectorAll(".palette button").forEach(x => x.classList.remove("actif"));\
+  b.classList.add("actif"); couleur = b.dataset.c;\
+\});\
+\
+// ---------- Journal ----------\
+$("btnSauver").onclick = () => \{\
+  const texte = $("texte").value.trim();\
+  if (!texte) return;\
+  data.entrees.unshift(\{\
+    id: Date.now(),\
+    date: new Date().toLocaleDateString("fr-FR", \{ dateStyle: "long" \}),\
+    passage, texte,\
+    tags: $("tags").value.split(",").map(t => t.trim()).filter(Boolean)\
+  \});\
+  $("texte").value = ""; $("tags").value = "";\
+  sauver(); afficher();\
+\};\
+\
+function afficher() \{\
+  const q = $("recherche").value.toLowerCase();\
+  $("entrees").innerHTML = data.entrees\
+    .filter(e => JSON.stringify(e).toLowerCase().includes(q))\
+    .map(e => `<div class="entree">\
+        <small>$\{echapper(e.date)\} $\{e.passage ? "\'97 " + echapper(e.passage) : ""\}</small>\
+        <p>$\{echapper(e.texte)\}</p>\
+        $\{e.tags.map(t => `<span class="tag">$\{echapper(t)\}</span>`).join("")\}\
+        <button class="secondaire" style="float:right;padding:2px 8px" onclick="suppr($\{e.id\})">\uc0\u55357 \u56785 </button>\
+      </div>`).join("") || "<p><em>Aucune entr\'e9e pour l'instant.</em></p>";\
+\}\
+window.suppr = id => \{\
+  if (!confirm("Supprimer cette entr\'e9e ?")) return;\
+  data.entrees = data.entrees.filter(e => e.id !== id); sauver(); afficher();\
+\};\
+$("recherche").oninput = afficher;\
+\
+// ---------- Sauvegarde / restauration ----------\
+$("btnExport").onclick = () => \{\
+  const a = document.createElement("a");\
+  a.href = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], \{ type: "application/json" \}));\
+  a.download = `bible-journal-$\{dateISO(new Date())\}.json`;\
+  a.click();\
+\};\
+$("fichier").onchange = async e => \{\
+  try \{\
+    data = JSON.parse(await e.target.files[0].text());\
+    sauver(); afficher(); alert("Journal import\'e9 !");\
+  \} catch \{ alert("Fichier invalide."); \}\
+\};\
+\
+// ---------- D\'e9marrage ----------\
+$("livre").onchange = () => \{ remplirChapitres(); lire(); \};\
+$("chapitre").onchange = lire;\
+$("btnLire").onclick = lire;\
+$("btnJour").onclick = lecturesDuJour;\
+afficher();\
+\
+chargerBible().then(() => \{\
+  $("livre").innerHTML = "";\
+  BIBLE.forEach((l, i) => $("livre").add(new Option(l.fr, i)));\
+  const jean = BIBLE.findIndex(l => l.fr === "Jean");\
+  $("livre").value = jean >= 0 ? jean : 0;\
+  remplirChapitres(); lire();\
+\}).catch(e => \{\
+  $("versets").textContent = "Impossible de charger crampon.json : " + e.message +\
+    ". V\'e9rifie qu'il est bien dans le d\'e9p\'f4t, \'e0 c\'f4t\'e9 d'index.html.";\
+\});\
+</script>\
+</body>\
+</html>}
